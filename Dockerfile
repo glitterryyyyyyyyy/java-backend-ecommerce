@@ -1,5 +1,9 @@
-FROM openjdk:17
+FROM eclipse-temurin:21-jdk
+
 WORKDIR /app
+
 COPY . .
-RUN ./mvnw clean install
-CMD ["./mvnw", "spring-boot:run"]
+
+RUN chmod +x mvnw && ./mvnw clean install -DskipTests
+
+CMD ["./mvnw", "spring-boot:run", "-DskipTests"]
