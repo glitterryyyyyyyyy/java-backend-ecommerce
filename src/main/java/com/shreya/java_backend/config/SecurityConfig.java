@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -29,14 +30,13 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/api/user/login",
-                    "/api/user/signup",
-                    "/api/user/verify",
-                    "/h2-console/**"
-                ).permitAll()
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/cart/**", "/api/products/**").authenticated()
+                .requestMatchers(new AntPathRequestMatcher("/api/user/login")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/api/user/signup")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/api/user/verify")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/h2-console/")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/api/admin/")).hasRole("ADMIN")
+                .requestMatchers(new AntPathRequestMatcher("/api/cart/")).authenticated()
+                .requestMatchers(new AntPathRequestMatcher("/api/products/")).authenticated()
                 .anyRequest().authenticated()
             )
             .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
@@ -60,7 +60,8 @@ public class SecurityConfig {
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
+        source.registerCorsConfiguration("/", config);
         return source;
     }
 }
+
