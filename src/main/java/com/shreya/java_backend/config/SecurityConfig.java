@@ -29,9 +29,13 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/user/login", "/api/user/signup", "/api/user/verify", "/h2-console/**").permitAll()
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/cart/**", "/api/products/**").authenticated()
+                .requestMatchers("/api/user/login").permitAll()
+                .requestMatchers("/api/user/signup").permitAll()
+                .requestMatchers("/api/user/verify").permitAll()
+                .requestMatchers("/h2-console/").permitAll()
+                .requestMatchers("/api/admin/").hasRole("ADMIN")
+                .requestMatchers("/api/cart/").authenticated()
+                .requestMatchers("/api/products/").authenticated()
                 .anyRequest().authenticated()
             )
             .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
@@ -55,7 +59,7 @@ public class SecurityConfig {
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
+        source.registerCorsConfiguration("/**", config); 
+        return source; 
     }
 }
