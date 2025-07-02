@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "products")
+@Table(name = "product")  
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,5 +23,6 @@ public class Product {
     @Column(nullable = false)
     private double price;
 
-    private String imageUrl;
+    private String imageUrl;  
 }
+
