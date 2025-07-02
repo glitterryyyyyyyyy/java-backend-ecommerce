@@ -25,14 +25,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/user/signup", "/api/user/login", "/api/user/verify", "/h2-console/").permitAll()
-                .requestMatchers("/api/products/").authenticated()
-                .requestMatchers("/api/cart/").authenticated()
+                .requestMatchers("/api/user/login", "/api/user/signup", "/api/user/verify").permitAll()
+                .requestMatchers("/h2-console/").permitAll()
                 .requestMatchers("/api/admin/").hasRole("ADMIN")
+                .requestMatchers("/api/cart/").authenticated()
+                .requestMatchers("/api/products/").authenticated()
                 .anyRequest().authenticated()
             )
             .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
@@ -50,9 +51,9 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("*")); // allow all for now (you can restrict to React origin later)
+        config.setAllowedOrigins(List.of("http://localhost:3000", "https://your-frontend.vercel.app"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Cache-Control"));
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
