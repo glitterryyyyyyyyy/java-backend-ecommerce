@@ -29,11 +29,10 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/user/login", "/api/user/signup", "/api/user/verify").permitAll()
+                .requestMatchers("/api/user/signup", "/api/user/login", "/api/user/verify").permitAll()
                 .requestMatchers("/h2-console/").permitAll()
                 .requestMatchers("/api/admin/").hasRole("ADMIN")
-                .requestMatchers("/api/cart/").authenticated()
-                .requestMatchers("/api/products/").authenticated()
+                .requestMatchers("/api/products/", "/api/cart/").authenticated()
                 .anyRequest().authenticated()
             )
             .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
@@ -51,13 +50,13 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:3000", "https://your-frontend.vercel.app"));
+        config.setAllowedOrigins(List.of("http://localhost:3000")); 
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config); // fixed from "/" to "/**"
-        return source; // removed non-breaking space
+        source.registerCorsConfiguration("/**", config); 
+        return source; 
     }
 }
